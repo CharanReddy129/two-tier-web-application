@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/CharanReddy129/two-tier-app.git'
+                git branch: 'main', credentialsId: 'github_pat', url: 'https://github.com/CharanReddy129/two-tier-app.git'
             }
         }
         stage("build") {
