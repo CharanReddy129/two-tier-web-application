@@ -28,6 +28,7 @@ pipeline {
             }
             steps {
                 sh '''
+                rm -rf ${GITHUB_REPO_NAME}
                 git clone https://github.com/CharanReddy129/two-tier-argocd-repo.git
                 git config --global user.email "charangajulapalli2001@gmail.com"
                 git config --global user.name "charan"
