@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Hello') {
+        stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/CharanReddy129/two-tier-app.git'
             }
