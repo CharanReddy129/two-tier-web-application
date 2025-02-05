@@ -1,0 +1,26 @@
+services:
+  flask:
+    image: charanreddy12/two-tier-flaskapp:latest
+    ports:
+      - "5000:5000"
+    environment:
+      MYSQL_HOST: "mysql"
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: "admin"
+      MYSQL_DB: "mydb"
+    depends_on:
+      - mysql
+    command: flask run --host=0.0.0.0 --port=5000
+
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: "mydb"
+      MYSQL_ROOT_PASSWORD: "admin"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./message.sql:/docker-entrypoint-initdb.d/message.sql
+volumes:
+  mysql-data:
