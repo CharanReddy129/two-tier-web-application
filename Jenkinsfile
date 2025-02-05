@@ -32,6 +32,7 @@ pipeline {
                 git clone https://github.com/CharanReddy129/two-tier-argocd-repo.git
                 git config --global user.email "charangajulapalli2001@gmail.com"
                 git config --global user.name "charan"
+                git pull origin main
                 sed -i 's|charanreddy12/two-tier-flaskapp:.*|charanreddy12/two-tier-flaskapp:${BUILD_NUMBER}|g' kubernetes/flask_deployment.yml
                 git commit -am "updating the image tag to ${BUILD_NUMBER} in flask_deployment.yml file"
                 git push https://${GITHUB_CREDENTIALS}@github.com/${GITHUB_USER_NAME}/${GITHUB_REPO_NAME} HEAD:main
