@@ -39,5 +39,12 @@ pipeline {
                 '''
             }
         }
+        stage('k8s deployment') {
+            steps {
+                withKubeConfig(caCertificate: '', clusterName: 'kind', contextName: 'kind', credentialsId: 'k8s-token', namespace: '', restrictKubeConfigAccess: false, serverUrl: 'https://127.0.0.1:43721') {
+                    sh 'kubectl apply -f argocd.yml'
+                }
+            }
+        }
     }
 }
