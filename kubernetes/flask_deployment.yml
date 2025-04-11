@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: flask-con
-          image: charanreddy12/two-tier-flaskapp:latest
+          image: charanreddy12/two-tier-flaskapp:7
           ports:
             - containerPort: 5000
           imagePullPolicy: Always
