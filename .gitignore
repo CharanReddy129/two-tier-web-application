@@ -1,0 +1,10 @@
+
+# to ignore the intermediate files
+
+terraform/**/.terraform
+terraform/**/.terraform.lock.hcl
+
+# state files
+
+terraform/**/terraform.tfstate
+terraform/**/terraform.tfstate.backup
