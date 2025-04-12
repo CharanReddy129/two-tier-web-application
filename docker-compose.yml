@@ -10,7 +10,8 @@ services:
       MYSQL_DB: "mydb"
     depends_on:
       - mysql
-    command: flask run --host=0.0.0.0 --port=5000
+    # command: flask run --host=0.0.0.0 --port=5000
+    command: sh -c "sleep 10 && python app.py"
 
   mysql:
     image: mysql:5.7
