@@ -22,7 +22,17 @@ def init_db():
             message TEXT
         );
         ''')
-        mysql.connection.commit()  
+        mysql.connection.commit()
+        # Check if the table is empty
+        cur.execute("SELECT COUNT(*) FROM messages")
+        count = cur.fetchone()[0]
+
+        # Insert default messages if none exist
+        if count == 0:
+            cur.executemany("INSERT INTO messages (message) VALUES (%s)", [
+                ('Hello from Flask!',)
+            ])
+            mysql.connection.commit()
         cur.close()
 
 @app.route('/')
