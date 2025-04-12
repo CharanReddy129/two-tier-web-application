@@ -29,5 +29,5 @@ spec:
               value: "admin"
             - name: MYSQL_DB
               value: "mydb"
-      imagePullSecrets:
-        - name: ecr-registry-secret
+      # imagePullSecrets:
+      #   - name: ecr-registry-secret
