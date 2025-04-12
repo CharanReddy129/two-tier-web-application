@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+
+    environment{
+        AWS_REGION = "ap-south-1"
+        IMAGE_TAG = "v${BUILD_NUMBER}"
+        REPO_URL = "851725275708.dkr.ecr.ap-south-1.amazonaws.com/flask-app"
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', changelog: false, poll: false, url: 'https://github.com/CharanReddy129/two-tier-web-application.git'
+            }
+        }
+        stage('image build') {
+            steps {
+                sh 'docker build -t ${REPO_URL}:${IMAGE_TAG} . '
+            }
+        }
+        stage('ecr login') {
+            steps {
+                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-cred', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')])  {
+                    sh 'aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 851725275708.dkr.ecr.ap-south-1.amazonaws.com'
+                }
+            }
+        }
+        stage('image push') {
+            steps {
+                sh 'docker push ${REPO_URL}:${IMAGE_TAG}'
+            }
+        }
+        stage('code to push') {
+            environment {
+                GITHUB_CREDENTIALS = credentials('github')
+                GITHUB_USER_NAME = "CharanReddy129"
+                GITHUB_REPO_NAME = "two-tier-web-application"
+            }
+            steps {
+                sh '''
+                rm -rf ${GITHUB_REPO_NAME}
+                git clone https://github.com/CharanReddy129/two-tier-web-application.git
+                cd ${GITHUB_REPO_NAME}
+                git config --global user.email "charangajulapalli2001@gmail.com"
+                git config --global user.name "charan"
+                sed -i "s|${REPO_URL}:.*|${REPO_URL}:${IMAGE_TAG}|g" kubernetes/flask_deployment.yml
+                git commit -am "updating the image tag to ${IMAGE_TAG} in flask_deployment.yml file"
+                git push https://${GITHUB_CREDENTIALS}@github.com/${GITHUB_USER_NAME}/${GITHUB_REPO_NAME} HEAD:main
+                '''
+            }
+        }
+    }
+}

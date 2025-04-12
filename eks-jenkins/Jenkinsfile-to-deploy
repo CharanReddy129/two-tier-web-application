@@ -1,0 +1,22 @@
+pipeline {
+    agent any
+    environment {
+        AWS_REGION = "ap-south-1"
+        KUBECONFIG = "/var/lib/jenkins/.kube/config"
+    }
+    stages {
+        stage('checkout') {
+            steps {
+                git branch: 'main', changelog: false, poll: false, url: 'https://github.com/CharanReddy129/two-tier-web-application.git'
+            }
+        }
+        stage("deploying application") {
+            steps {
+                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-cred', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    sh 'cd kubernetes && kubectl apply -f .'
+                }
+            }
+        }
+    }
+}
+
